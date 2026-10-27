@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>ECS Architecture | AWEngine </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="ECS Architecture | AWEngine ">
+      
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/revDevotee/AWEngine/blob/my-update/docs/eng/articles/ecs-architecture.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="AWEngine">
+            AWEngine
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="ecs-architecture">ECS Architecture</h1>
+
+<p>AWEngine uses the ECS pattern to separate data and logic.
+All examples are just examples, and they are written to be AS SIMPLE AS POSSIBLE.</p>
+<hr>
+<h2 id="ecsentity">EcsEntity</h2>
+<ul>
+<li><strong>EcsEntity</strong> is a unique container for components. It has methods such as:
+<ul>
+<li>
+<blockquote>
+<p><code>EcsEntity.AddComponent(EcsComponent component)</code> Adds a component to the entity. Supports method chaining (<code>EcsEntity.AddComponent(EcsComponent component).AddComponent(EcsComponent component)</code>).</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p><code>EcsEntity.RemoveComponent&lt;T&gt;() where T : EcsComponent</code> Removes a component from the entity. Also supports method chaining.</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p><code>EcsEntity.SwapComponent&lt;T&gt;(EcsComponent S) where T : EcsComponent</code> Replaces component <code>T</code> with component <code>S</code>. Added so you don't have to write &quot;remove this component and add that component&quot; twice.</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p><code>EcsEntity.GetComponent&lt;T&gt;() where T : EcsComponent</code> Gets component <code>T</code> from the entity to work with its contents.</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p><code>EcsEntity.HasComponent&lt;T&gt;() where T : EcsComponent</code> Returns <code>true</code> if component <code>T</code> exists in the entity.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<p>Example with <strong>EcsEntity</strong>:</p>
+<pre><code class="lang-csharp">var hero = new EcsEntity();
+hero.AddComponent(new Info { Name = &quot;Hero&quot;, Description = &quot;Really cool guy&quot;} );
+hero.AddComponent(new Respect());
+hero.AddComponent(new Inventory { Space = 10 } );
+
+if (2+2 != 5) 
+{
+    hero.SwapComponent&lt;Respect&gt;(new Disrespect());
+}
+
+if (hero.HasComponent&lt;Respect&gt;())
+{
+    hero.GetComponent&lt;Inventory&gt;().Space = 20
+}
+else
+{
+    hero.RemoveComponent&lt;Inventory&gt;();
+}
+</code></pre>
+<hr>
+<h2 id="ecscomponent">EcsComponent</h2>
+<ul>
+<li><strong>EcsComponent</strong> represents pure data (inherits from <code>EcsComponent</code>).</li>
+</ul>
+<p>Example with <strong>EcsComponent</strong>:</p>
+<pre><code class="lang-csharp">public class Respect : EcsComponent //You can even leave them empty if you want to use them as a marker, or honestly, just do whatever you want.
+{
+
+}
+
+public class Inventory : EcsComponent
+{
+    public int Space { get; set; }
+}
+</code></pre>
+<hr>
+<h2 id="ecssystem">EcsSystem</h2>
+<ul>
+<li><strong>EcsSystem</strong> handles game logic processing entities. Registered via <code>SystemManager</code> by execution phases (<code>ExecutionPhase</code>).
+<ul>
+<li>
+<blockquote>
+<p>Child classes <em>MUST</em> implement <code>public override void Update(IReadOnlyList&lt;EcsEntity&gt; entities)</code>.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<p>Example with <strong>EcsSystem</strong>:</p>
+<pre><code class="lang-csharp">public class AOEDamage : EcsSystem
+{
+    public override void Update(IReadOnlyList&lt;EcsEntity&gt; entities)
+    {
+        var mainHero = entities.FirstOrDefault(s =&gt; s.HasComponent&lt;MainHero&gt;());
+        foreach(EcsEntity entity in entities)
+        {
+            if (entity.HasComponent&lt;Enemy&gt;())
+            {
+                entity.GetComponent&lt;Stats&gt;().HP -= mainHero.GetComponent&lt;Stats&gt;().AOEDamage
+            }
+        }
+    }
+}
+</code></pre>
+<hr>
+<h2 id="worldcontext">WorldContext</h2>
+<ul>
+<li><strong>WorldContext</strong> is the storage for all active entities (<code>EcsEntity</code>) in the world. It has the following methods:
+<ul>
+<li>
+<blockquote>
+<p><code>WorldContext.AddEntity(EcsEntity entity)</code> Adds a new entity to the storage.</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p><code>WorldContext.Cleanup&lt;T&gt;() where T : EcsComponent</code> Deletes all entities that have component <code>T</code> (for example, if you created a <code>Remove</code> component, all entities having this component will be deleted when this method is called).</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<p>Example with <strong>WorldContext</strong>:</p>
+<pre><code class="lang-csharp">var wc = new WorldContext();
+var hero = new EcsEntity();
+var enemy = new EcsEntity();
+
+hero.AddComponent(new MainHero()).AddComponent(new Stats{ HP = 100, Damage = 50});
+enemy.AddComponent(new Enemy()).AddComponent(new Stats{ HP = 30, Damage = 15});
+
+wc.AddEntity(hero);
+wc.AddEntity(enemy);
+
+var mainHero = entities.FirstOrDefault(s =&gt; s.HasComponent&lt;MainHero&gt;());
+var enemy = entities.FirstOrDefault(s =&gt; s.HasComponent&lt;Enemy&gt;());
+
+if(enemy.GetComponent&lt;Stats&gt;().HP - mainHero.GetComponent&lt;Stats&gt;().Damage &lt;= 0)
+{
+    enemy.AddComponent(new Remove());
+}
+else
+{
+    Console.WriteLine(&quot;Фу бот не убил&quot;);
+}
+
+wc.Cleanup&lt;Remove&gt;();
+</code></pre>
+<hr>
+<h2 id="systemmanager">SystemManager</h2>
+<ul>
+<li><strong>SystemManager</strong> is the storage for all registered systems (<code>EcsSystem</code>) sorted by execution phases (<code>ExecutionPhase</code>). It has methods:
+<ul>
+<li>
+<blockquote>
+<p><code>SystemManager.Add(ExecutionPhase phase, EcsSystem system)</code> Adds a system to the list for a specific execution phase type. Supports overloading and can accept a <code>List&lt;EcsSystem&gt;</code> instead of a single system.</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p><code>SystemManager.Remove(ExecutionPhase phase, EcsSystem system)</code> Removes a system from the list for a specific execution phase type.</p>
+</blockquote>
+</li>
+<li>
+<blockquote>
+<p><code>SystemManager.Update(WorldContext wc, ExecutionPhase phase)</code> Executes all registered systems for the specified execution phase type.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<p>Example with <strong>SystemManager</strong>:</p>
+<pre><code class="lang-csharp">public static class GameSystems
+{
+    public static ExecutionPhase render = new ExecutionPhase();
+    public static ExecutionPhase input = new ExecutionPhase();
+}
+
+var wc = new WorldContext();
+var sm = new SystemManager();
+systems.Add(GameSystems.input, new GetButton());
+systems.Add(GameSystems.render, new MainMenu());
+
+var ui = new Entity();
+ui.AddComponent(new MainMenuUI())
+wc.AddEntity(ui);
+
+sm.Update(wc, GameSystems.input);
+sm.Update(wc, GameSystems.render);
+
+</code></pre>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/revDevotee/AWEngine/blob/my-update/docs/eng/articles/ecs-architecture.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
