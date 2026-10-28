@@ -16,7 +16,7 @@
   },
   "index.html": {
     "href": "index.html",
-    "title": "AWEngine Documentation eng | AWEngine",
-    "summary": "AWEngine Documentation eng AWEngine is a lightweight, custom C# game engine implementing the ECS (Entity-Component-System) pattern, made by revDevotee. All rights are NOT reserved! :D Key Features Custom ECS Architecture: Flexible separation of data (EcsComponent, EcsEntity) and logic (EcsSystem). Execution Phases: Control system execution order via SystemManager. (Un)reliable Error Handling: Built-in exception handling mechanisms operating at both the engine game loop level and isolated within each system. Navigation Quick Start — how to launch a project using AWEngine. ECS Architecture — deep dive into entities, components, and systems. Lifecycle & Error Handling — how the main loop works and crash protection works. Still Confused? I mean, everything should be crystal clear, but feel free to try asking me if you get stuck ;D"
+    "title": "AWEngine Documentation | AWEngine",
+    "summary": "AWEngine Documentation AWEngine is a lightweight, custom C# game engine implementing the ECS (Entity-Component-System) pattern, made by revDevotee. All rights are NOT reserved! :D Key Features Custom ECS Architecture: Flexible separation of data (EcsComponent, EcsEntity) and logic (EcsSystem). Execution Phases: Control system execution order via SystemManager. (Un)reliable Error Handling: Built-in exception handling mechanisms operating at both the engine game loop level and isolated within each system. Navigation Quick Start — how to launch a project using AWEngine. ECS Architecture — deep dive into entities, components, and systems. Lifecycle & Error Handling — how the main loop works and crash protection works. Still Confused? I mean, everything should be crystal clear, but feel free to try asking me if you get stuck ;D"
   }
 }
