@@ -1,0 +1,32 @@
+body { 
+  font-family: sans-serif; 
+  text-align: center; 
+  margin-top: 20vh;
+  background: #121212; 
+  color: #fff;
+}
+.lang-links a { 
+  display: inline-block;
+  margin: 0px 50px; 
+  font-size: 1.5rem; 
+  color: #4ea8de; 
+  text-decoration: none; 
+}
+.lang-links a:hover { 
+  color: #4d83a3;
+  text-decoration: underline; 
+}
+.rua{
+  display: block;
+}
+.ena{
+  display: block;
+}
+.addinfo{
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  font-size: 13px;
+  color: #aaa;
+  padding: 5px;
+}
