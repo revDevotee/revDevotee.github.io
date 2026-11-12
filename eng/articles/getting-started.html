@@ -132,8 +132,8 @@ class Program
     static void Main(string[] args)
     {
         MyGame game = new MyGame();
-        // Run engine(FastSplash: true, if you want to skip splash screen faster. False by default)
-        game.Run(FastSplash: false);
+        // 0 - No splash; 1 - Cool splash; 2 - fast splash which just show a text for 1.5 sec
+        game.Run(splash: 1);
     }
 }
 
@@ -154,14 +154,6 @@ public class MyGame : AWEngine.AWEngine
     }
 }
 </code></pre>
-<h2 id="splashscreen">SplashScreen</h2>
-<p>The engine supports a colorful splash screen. You can trigger it manually, or it will run automatically when calling the <code>Run()</code> method:</p>
-<blockquote>
-<p><code>FastSplash</code> = false - displays a full ASCII-art banner and an animated initialization process with a spinner (-, , |, /).</p>
-</blockquote>
-<blockquote>
-<p><code>FastSplash</code> = true - fast text output for 1.5 seconds.</p>
-</blockquote>
 
 </article>
                 </div>

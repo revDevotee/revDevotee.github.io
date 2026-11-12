@@ -122,14 +122,15 @@
                     <article class="content wrap" id="_content" data-uid="">
 <h1 id="lifecycle-and-errors">Lifecycle and Errors</h1>
 
-<p>The <code>Run(bool FastSplash = false)</code> method manages the engine's full lifecycle, sequentially guiding the application through initialization, the main loop, and safe interception of potential crashes.</p>
+<p>The <code>Run(int splash = 1)</code> method manages the engine's full lifecycle, sequentially guiding the application through initialization, the main loop, and safe interception of potential crashes. <code>splash</code> values: 0 - No splash; 1 - Cool splash; 2 - fast splash which just show a text for 1.5 sec</p>
 <h2 id="execution-order">Execution Order</h2>
 <ol>
 <li><p><strong>Splash Screen (<code>SplashScreen</code>)</strong><br>
 Displays the engine's start screen. Behavior depends on the <code>FastSplash</code> parameter:</p>
 <ul>
-<li><strong><code>false</code> (default):</strong> Displays the signature ASCII art, authorship info (<code>AWEngine by revDevotee</code>), and launches an animated loading spinner (<code>-</code>, <code>\</code>, <code>|</code>, <code>/</code>).</li>
-<li><strong><code>true</code>:</strong> Skips the animation and ASCII art, displaying a short text string with a 1.5-second delay for a faster startup.</li>
+<li><strong><code>0</code>:</strong> no splash :c</li>
+<li><strong><code>1</code> (default):</strong> Displays the signature ASCII art, authorship info (<code>AWEngine by revDevotee</code>), and launches an animated loading spinner (<code>-</code>, <code>\</code>, <code>|</code>, <code>/</code>).</li>
+<li><strong><code>2</code>:</strong> Skips the animation and ASCII art, displaying a short text string with a 1.5-second delay for a faster startup.</li>
 </ul>
 </li>
 <li><p><strong>Initialization (<code>Init</code>)</strong><br>
@@ -137,6 +138,9 @@ Calls the protected abstract <code>Init()</code> method. At this stage, the chil
 </li>
 <li><p><strong>Main Loop (<code>Update</code>)</strong><br>
 Launches a continuous process within a <code>while (running)</code> block. Iterations run as long as the <code>running</code> flag is <code>true</code>. Modifying this flag from the outside allows for a graceful shutdown of the engine.</p>
+</li>
+<li><p><strong>Render (<code>Render</code>)</strong><br>
+Initially, I made it so that the rendering logic wouldn't be inside the main loop(<code>Update</code>). It runs after the main loop finishes its cycle - basically, it just executes after the main loop's cycle is done (<code>Update</code>).</p>
 </li>
 </ol>
 <hr>

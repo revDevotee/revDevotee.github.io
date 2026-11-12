@@ -132,8 +132,8 @@ class Program
     static void Main(string[] args)
     {
         MyGame game = new MyGame();
-        // Запуск движка (можно передать true для быстрого сплэшскрина)
-        game.Run(FastSplash: false);
+        // 0 - без стартового экрана; 1 - красивый стартовый экран; 2 - просто текст с авторством на 1.5 секунд
+        game.Run(splash: 1);
     }
 }
 
@@ -154,14 +154,6 @@ public class MyGame : AWEngine.AWEngine
     }
 }
 </code></pre>
-<h2 id="запуск-splashscreen">Запуск SplashScreen</h2>
-<p>Движок поддерживает красочный стартовый экран. Вы можете вызвать его вручную или он запустится автоматически при вызове метода Run():</p>
-<blockquote>
-<p><code>FastSplash</code> = false - показывает полный ASCII-арт баннер и анимированный процесс инициализации с крутилкой (-, , |, /).</p>
-</blockquote>
-<blockquote>
-<p><code>FastSplash</code> = true - быстрый текстовый вывод на 1.5 секунды.</p>
-</blockquote>
 
 </article>
                 </div>
